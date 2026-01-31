@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Class Scripts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/adm.css">
+</head>
+<body>
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <h2>Admin Login</h2>
+            <div id="login-alert"></div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="hidden">
+        <div class="container">
+            <div class="header">
+                <h1>Painel Admin - Class Scripts</h1>
+                <div class="user-info">
+                    <span id="user-email"></span>
+                    <button class="btn btn-danger" onclick="logout()">Sair</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-scripts">0</div>
+                    <div class="stat-label">Total de Scripts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-active">0</div>
+                    <div class="stat-label">Scripts Ativos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-announcements">0</div>
+                    <div class="stat-label">Anúncios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-khan">❌</div>
+                    <div class="stat-label">Khan Academy</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Modo Manutenção</h2>
+                </div>
+                <form id="maintenance-form">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="maintenance-active">
+                            <option value="false">Desativado</option>
+                            <option value="true">Ativado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mensagem</label>
+                        <input type="text" id="maintenance-message" placeholder="Site em manutenção...">
+                    </div>
+                    <button type="submit" class="btn">Atualizar Manutenção</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Script Khan Academy</h2>
+                </div>
+                <form id="khan-form">
+                    <div class="form-group">
+                        <label>Código do Script</label>
+                        <textarea id="khan-code" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <input type="text" id="khan-desc" value="Script automático para Khan Academy">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="khan-status">
+                            <option value="Ativo">Ativo</option>
+                            <option value="Inativo">Inativo</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Atualizar Khan Script</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Criar Anúncio</h2>
+                </div>
+                <form id="announcement-form">
+                    <div class="form-group">
+                        <label>Mensagem</label>
+                        <textarea id="announcement-message" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Autor</label>
+                        <input type="text" id="announcement-author" value="Admin">
+                    </div>
+                    <button type="submit" class="btn btn-success">Criar Anúncio</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Anúncios Existentes</h2>
+                </div>
+                <div id="announcements-list" class="loading">Carregando...</div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Aviso Global</h2>
+                </div>
+                <form id="aviso-form">
+                    <div class="form-group">
+                        <label>Mensagem do Aviso</label>
+                        <textarea id="aviso-message"></textarea>
+                    </div>
+                    <button type="submit" class="btn">Atualizar Aviso</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxCCbHYMcU4dPgMWkhE73939ErOaA2Stc",
+            authDomain: "controle-class-scripts.firebaseapp.com",
+            projectId: "controle-class-scripts",
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        const API_URL = 'http://localhost:3000/api';
+        let authToken = null;
+
+        async function apiRequest(endpoint, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+
+            if (authToken) {
+                headers['Authorization'] = `Bearer ${authToken}`;
+            }
+
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                ...options,
+                headers
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error);
+            return data;
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                authToken = await userCredential.user.getIdToken();
+                
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+                document.getElementById('user-email').textContent = email;
+                
+                loadDashboard();
+            } catch (error) {
+                document.getElementById('login-alert').innerHTML = 
+                    `<div class="alert alert-danger">${error.message}</div>`;
+            }
+        });
+
+        function logout() {
+            firebase.auth().signOut();
+            authToken = null;
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        async function loadDashboard() {
+            try {
+                const stats = await apiRequest('/admin/stats');
+                document.getElementById('stat-scripts').textContent = stats.totalScripts;
+                document.getElementById('stat-active').textContent = stats.activeScripts;
+                document.getElementById('stat-announcements').textContent = stats.totalAnnouncements;
+                document.getElementById('stat-khan').textContent = stats.khanScriptActive ? '✅' : '❌';
+
+                const khan = await apiRequest('/khan-script');
+                document.getElementById('khan-code').value = khan.code || '';
+                document.getElementById('khan-desc').value = khan.desc || '';
+                document.getElementById('khan-status').value = khan.status || 'Ativo';
+
+                const aviso = await apiRequest('/aviso');
+                document.getElementById('aviso-message').value = aviso.mensagem || '';
+
+                loadAnnouncements();
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+            }
+        }
+
+        async function loadAnnouncements() {
+            try {
+                const announcements = await apiRequest('/announcements');
+                const container = document.getElementById('announcements-list');
+                
+                if (announcements.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-secondary);">Nenhum anúncio encontrado.</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Mensagem</th>
+                                <th>Autor</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${announcements.map(a => `
+                                <tr>
+                                    <td>${a.mensagem.substring(0, 50)}...</td>
+                                    <td>${a.autor}</td>
+                                    <td>${new Date(a.timestamp).toLocaleDateString('pt-BR')}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-small" onclick="deleteAnnouncement('${a.id}')">
+                                            Deletar
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                console.error('Erro ao carregar anúncios:', error);
+            }
+        }
+
+        document.getElementById('maintenance-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiRequest('/admin/maintenance', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        active: document.getElementById('maintenance-active').value === 'true',
+                        message: document.getElementById('maintenance-message').value
+                    })
+                });
+                alert('Manutenção atualizada!');
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        });
+
+        document.getElementById('khan-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiRequest('/admin/khan-script', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        code: document.getElementById('khan-code').value,
+                        desc: document.getElementById('khan-desc').value,
+                        status: document.getElementById('khan-status').value
+                    })
+                });
+                alert('Khan script atualizado!');
+                loadDashboard();
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        });
+
+        document.getElementById('announcement-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiRequest('/admin/announcements', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        mensagem: document.getElementById('announcement-message').value,
+                        autor: document.getElementById('announcement-author').value
+                    })
+                });
+                alert('Anúncio criado!');
+                document.getElementById('announcement-form').reset();
+                loadAnnouncements();
+                loadDashboard();
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        });
+
+        document.getElementById('aviso-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiRequest('/admin/aviso', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        mensagem: document.getElementById('aviso-message').value
+                    })
+                });
+                alert('Aviso atualizado!');
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        });
+
+        async function deleteAnnouncement(id) {
+            if (!confirm('Tem certeza que deseja deletar este anúncio?')) return;
+            
+            try {
+                await apiRequest(`/admin/announcements/${id}`, { method: 'DELETE' });
+                alert('Anúncio deletado!');
+                loadAnnouncements();
+                loadDashboard();
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

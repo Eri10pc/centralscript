@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gabaritos - Prepare-se com Sucesso</title>
+    <meta name="description" content="Gabaritos de alta qualidade. ENEM, Vestibulares, Concursos e muito mais!">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #111111;
+            --primary: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+            --pdf-color: #e63946;
+            --txt-color: #03dac6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translateY(8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translateY(-8px);
+        }
+
+        .mobile-menu {
+            display: none;
+            list-style: none;
+            flex-direction: column;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 16px 24px;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 0 60px;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            min-height: 80px;
+        }
+
+        .hero h1::after {
+            content: '_';
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .hero p {
+            font-size: clamp(16px, 2vw, 18px);
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .content-section {
+            padding: 80px 0 120px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .script-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .script-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ffffff, var(--primary));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .script-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .card-category {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+        }
+
+        .file-type-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .file-type-badge.pdf {
+            background: rgba(230, 57, 70, 0.15);
+            color: var(--pdf-color);
+        }
+
+        .file-type-badge.txt {
+            background: rgba(3, 218, 198, 0.15);
+            color: var(--txt-color);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            word-wrap: break-word;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            word-wrap: break-word;
+        }
+
+        .card-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .card-button:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        .card-button:active {
+            transform: scale(0.98);
+        }
+
+        .card-button.pdf-btn:hover {
+            background: var(--pdf-color);
+            color: white;
+        }
+
+        .card-button.txt-btn:hover {
+            background: var(--txt-color);
+            color: var(--bg-dark);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-card::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .modal-card::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 5px;
+        }
+
+        .modal-card::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            word-wrap: break-word;
+        }
+
+        .modal-content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            word-wrap: break-word;
+        }
+
+        .modal-content.txt-content {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 450px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.8;
+            border: 1px solid var(--border);
+            color: #e0e0e0;
+        }
+
+        .modal-content.txt-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content.txt-content::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 4px;
+        }
+
+        .modal-content.txt-content::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 4px;
+        }
+
+        .loading-txt {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .modal-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 14px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-button:active {
+            transform: translateY(0);
+        }
+
+        .modal-button.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        footer {
+            padding: 60px 0 40px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero {
+                min-height: 90vh;
+                padding: 100px 0 40px;
+            }
+
+            .hero h1 {
+                font-size: clamp(32px, 10vw, 48px);
+                min-height: 60px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+
+            .content-section {
+                padding: 60px 0 80px;
+            }
+
+            .section-header {
+                margin-bottom: 32px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .script-card {
+                padding: 20px;
+            }
+
+            .script-card:active {
+                transform: scale(0.98);
+            }
+
+            .card-title {
+                font-size: 20px;
+            }
+
+            .card-description {
+                font-size: 13px;
+            }
+
+            .modal-backdrop {
+                padding: 10px;
+            }
+
+            .modal-card {
+                padding: 20px;
+                max-height: 90vh;
+                border-radius: 12px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+
+            .modal-content {
+                font-size: 14px;
+            }
+
+            .modal-content.txt-content {
+                font-size: 11px;
+                padding: 12px;
+                max-height: 350px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal-button {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 20px;
+            }
+
+            footer {
+                padding: 40px 0 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .modal-title {
+                font-size: 18px;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .script-card:hover {
+                transform: none;
+            }
+
+            .btn:hover,
+            .card-button:hover,
+            .modal-button:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 16L10 20L14 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M34 32L38 28L34 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M28 14L20 34" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    Gabaritos
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#gabaritos">Explorar</a></li>
+                </ul>
+                <div class="hamburger" onclick="toggleMenu()" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+            <ul class="mobile-menu" id="mobile-menu">
+                <li><a href="#gabaritos" onclick="toggleMenu()">Explorar</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1 id="typing-title"></h1>
+                <p>Acesse os melhores gabaritos em PDF e TXT</p>
+                <a href="#gabaritos" class="btn">
+                    <i class="fas fa-book"></i>
+                    Ver Gabaritos
+                </a>
+            </div>
+        </section>
+
+        <section id="gabaritos" class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Gabaritos Disponíveis</h2>
+                </div>
+                <div class="grid" id="gabaritos-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Carregando gabaritos...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-content" id="modal-content"></div>
+            <div class="modal-buttons">
+                <button class="modal-button secondary" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                    Fechar
+                </button>
+                <a class="modal-button" id="modal-action-btn" target="_blank">
+                    <i class="fas fa-external-link-alt"></i>
+                    Abrir em Nova Aba
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Feito para ajudar os estudantes 📚</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: atob("QUl6YVN5QnhDQ2JIWU1jVTRkUGdNV2toRTczOTM5RXJPYUEyU3Rj"),
+            authDomain: "controle-class-scripts.firebaseapp.com",
+            databaseURL: "https://controle-class-scripts-default-rtdb.firebaseio.com",
+            projectId: "controle-class-scripts",
+            storageBucket: "controle-class-scripts.firebasestorage.app",
+            messagingSenderId: "662596791017",
+            appId: "1:662596791017:web:857fa68154bc2d17375e78"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const hamburger = document.getElementById('hamburger');
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        function typewriter() {
+            const element = document.getElementById('typing-title');
+            const text = 'Gabaritos';
+            let i = 0;
+            let isDeleting = false;
+
+            function type() {
+                element.textContent = text.substring(0, i);
+                
+                if (!isDeleting && i < text.length) {
+                    i++;
+                    setTimeout(type, 150);
+                } else if (isDeleting && i > 0) {
+                    i--;
+                    setTimeout(type, 100);
+                } else {
+                    isDeleting = !isDeleting;
+                    setTimeout(type, isDeleting ? 5000 : 500);
+                }
+            }
+            type();
+        }
+
+        function openModal(title, description, url, tipo) {
+            document.getElementById('modal-title').textContent = title;
+            const contentDiv = document.getElementById('modal-content');
+            const actionBtn = document.getElementById('modal-action-btn');
+            
+            contentDiv.className = 'modal-content';
+            actionBtn.href = url;
+            
+            if (tipo === 'txt') {
+                contentDiv.innerHTML = '<div class="loading-txt"><div class="spinner"></div><p>Carregando conteúdo do arquivo...</p></div>';
+                
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Erro ao carregar');
+                        return response.text();
+                    })
+                    .then(text => {
+                        contentDiv.className = 'modal-content txt-content';
+                        contentDiv.textContent = text;
+                    })
+                    .catch(error => {
+                        contentDiv.className = 'modal-content';
+                        contentDiv.innerHTML = `<p style="color: var(--pdf-color);">⚠️ Não foi possível carregar o arquivo automaticamente.</p><p>Clique em "Abrir em Nova Aba" para visualizar o gabarito.</p>`;
+                    });
+                
+                actionBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Abrir TXT';
+            } else {
+                contentDiv.textContent = description;
+                actionBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Abrir PDF';
+            }
+            
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeModalOnBackdrop(event) {
+            if (event.target.id === 'modal') {
+                closeModal();
+            }
+        }
+
+        function createCard(gabarito) {
+            const card = document.createElement('div');
+            card.className = 'script-card';
+            
+            const tipo = gabarito.tipo || 'pdf';
+            const tipoUpper = tipo.toUpperCase();
+            const icon = tipo === 'pdf' ? 'fa-file-pdf' : 'fa-file-alt';
+            const btnClass = tipo === 'pdf' ? 'pdf-btn' : 'txt-btn';
+            const btnText = tipo === 'txt' ? 'Visualizar' : 'Acessar';
+
+            const escapedTitle = gabarito.titulo.replace(/'/g, "\\'").replace(/"/g, '\\"');
+            const escapedDesc = gabarito.descricao.replace(/'/g, "\\'").replace(/"/g, '\\"');
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-category">${gabarito.categoria || 'Gabarito'}</span>
+                    <span class="file-type-badge ${tipo}">
+                        <i class="fas ${icon}"></i>
+                        ${tipoUpper}
+                    </span>
+                </div>
+                <h3 class="card-title">${gabarito.titulo}</h3>
+                <p class="card-description">${gabarito.descricao}</p>
+                <button class="card-button ${btnClass}" onclick='openModal("${escapedTitle}", "${escapedDesc}", "${gabarito.url}", "${tipo}")'>
+                    <i class="fas ${icon}"></i>
+                    ${btnText} ${tipoUpper}
+                </button>
+            `;
+            
+            return card;
+        }
+
+        function loadGabaritos() {
+            const grid = document.getElementById('gabaritos-grid');
+            
+            console.log("Iniciando carregamento de gabaritos...");
+            db.ref('gabaritos').on('value', (snapshot) => {
+                console.log("Recebido callback do Firebase.");
+                grid.innerHTML = '';
+                const data = snapshot.val();
+                console.log("Dados recebidos:", data);
+                
+                if (data) {
+                    const gabaritos = [];
+                    Object.keys(data).forEach(key => {
+                        const item = data[key];
+                        if (item.status === 'Ativo') {
+                            gabaritos.push({ key: key, ...item });
+                        }
+                    });
+                    
+                    console.log("Gabaritos ativos:", gabaritos);
+                    gabaritos.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                    
+                    if (gabaritos.length > 0) {
+                        gabaritos.forEach(gabarito => {
+                            const card = createCard(gabarito);
+                            grid.appendChild(card);
+                        });
+                    } else {
+                        console.log("Nenhum gabarito ativo encontrado.");
+                        grid.innerHTML = '<div class="loading"><p>Nenhum gabarito disponível no momento.</p></div>';
+                    }
+                } else {
+                    console.log("Nenhum dado de gabarito encontrado.");
+                    grid.innerHTML = '<div class="loading"><p>Nenhum gabarito cadastrado ainda.</p></div>';
+                }
+            }, (error) => {
+                console.error("Erro ao carregar gabaritos do Firebase:", error);
+                grid.innerHTML = '<div class="loading"><p>Erro ao carregar gabaritos. Verifique o console para mais detalhes.</p></div>';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            typewriter();
+            loadGabaritos();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobile-menu');
+            const hamburger = document.getElementById('hamburger');
+            if (!menu.contains(e.target) && !hamburger.contains(e.target) && menu.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+    </script>
+</body>
+</html>

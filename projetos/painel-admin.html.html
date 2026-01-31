@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel de Controle - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Urbanist', sans-serif; background-color: #121212; color: #fff; padding: 20px; margin: 0; }
+        .container { max-width: 900px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 8px; }
+        .login-container { max-width: 400px; margin: 100px auto; background: #1e1e1e; padding: 40px; border-radius: 8px; text-align: center; }
+        h1, h2 { color: #bb86fc; border-bottom: 2px solid #bb86fc; padding-bottom: 10px; margin-bottom: 20px; }
+        h3 { color: #bb86fc; margin-bottom: 15px; }
+        input, textarea, select { width: 100%; padding: 12px; margin-top: 8px; margin-bottom: 15px; background: #333; color: #fff; border: 1px solid #444; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+        label { font-weight: bold; font-size: 14px; color: #aaa; }
+        button { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
+        button:disabled { background-color: #555; cursor: not-allowed; }
+        .btn { background-color: #bb86fc; color: #000; }
+        .btn:hover { background-color: #a06de5; }
+        .btn-danger { background-color: #cf6679; color: #000; }
+        .btn-danger:hover { background-color: #b04b5f; }
+        .btn-on { background-color: #03dac6; color: #000; }
+        .btn-off { background-color: #777; color: #000; }
+        .script-item, .announcement-item { background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
+        .script-info, .announcement-info { flex-grow: 1; }
+        .script-info h3, .announcement-info h3 { margin: 0 0 5px 0; color: #eee; }
+        .script-info small, .announcement-info small { color: #888; }
+        .script-actions, .announcement-actions { display: flex; gap: 10px; }
+        
+        .maintenance-control { background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 2px solid #ff3e3e; }
+        .maintenance-status { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .status-indicator { width: 20px; height: 20px; border-radius: 50%; animation: pulse 2s infinite; }
+        .status-indicator.active { background-color: #ff3e3e; box-shadow: 0 0 10px #ff3e3e; }
+        .status-indicator.inactive { background-color: #03dac6; box-shadow: 0 0 10px #03dac6; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        .time-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        
+        .khan-control { background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 2px solid #03dac6; }
+        .khan-badge { display: inline-block; background: #03dac6; color: #000; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px; }
+        
+        .modal { display: none; position: fixed; z-index: 101; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        .modal-content { background-color: #2a2a2a; margin: 10% auto; padding: 30px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 10px; }
+        .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+
+        .user-info { position: fixed; top: 20px; right: 20px; background: #2a2a2a; padding: 10px 20px; border-radius: 8px; display: flex; align-items: center; gap: 10px; z-index: 100; }
+        .user-info button { padding: 8px 16px; }
+
+        .preview-link { background: rgba(3, 218, 198, 0.1); border: 1px solid #03dac6; padding: 12px; border-radius: 8px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .preview-link a { color: #03dac6; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .preview-link a:hover { text-decoration: underline; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            .login-container { margin: 50px auto; padding: 25px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .time-inputs { grid-template-columns: 1fr; gap: 10px; }
+            .script-item, .announcement-item { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .script-actions, .announcement-actions { width: 100%; flex-direction: column; gap: 10px; }
+            .script-actions button, .announcement-actions button { width: 100%; padding: 12px; }
+            .modal-content { width: 95%; margin: 5% auto; padding: 20px; }
+            .maintenance-status { flex-direction: column; align-items: flex-start; }
+            .user-info { position: relative; top: 0; right: 0; margin-bottom: 20px; width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <h1><i class="fas fa-lock"></i> Login Administrador</h1>
+        <p style="color: #888; margin-bottom: 30px;">Entre com suas credenciais para acessar o painel</p>
+        
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="seu@email.com">
+        
+        <label for="login-password">Senha</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+        
+        <button onclick="loginUser()" class="btn" style="width: 100%; margin-top: 10px;">
+            <i class="fas fa-sign-in-alt"></i> Entrar
+        </button>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #444;">
+            <p style="color: #888; font-size: 14px; margin-bottom: 15px;">Não tem conta?</p>
+            <button onclick="showRegisterForm()" class="btn-on" style="width: 100%;">
+                <i class="fas fa-user-plus"></i> Criar Conta
+            </button>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="register-screen" class="login-container hidden">
+        <h1><i class="fas fa-user-plus"></i> Criar Conta</h1>
+        <p style="color: #888; margin-bottom: 30px;">Crie sua conta de administrador</p>
+        
+        <label for="register-email">Email</label>
+        <input type="email" id="register-email" placeholder="seu@email.com">
+        
+        <label for="register-password">Senha</label>
+        <input type="password" id="register-password" placeholder="Mínimo 6 caracteres">
+        
+        <button onclick="registerUser()" class="btn" style="width: 100%; margin-top: 10px;">
+            <i class="fas fa-check"></i> Criar Conta
+        </button>
+
+        <button onclick="showLoginForm()" class="btn-off" style="width: 100%; margin-top: 10px;">
+            <i class="fas fa-arrow-left"></i> Voltar ao Login
+        </button>
+    </div>
+
+    <!-- User Info Bar -->
+    <div id="user-info-bar" class="user-info hidden">
+        <span id="user-email-display" style="color: #03dac6;"></span>
+        <button onclick="logoutUser()" class="btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+    </div>
+
+    <!-- Main Control Panel -->
+    <div class="container hidden" id="main-content">
+        <h1><i class="fas fa-cogs"></i> Painel de Controle</h1>
+        
+        <div class="maintenance-control">
+            <h2><i class="fas fa-wrench"></i> Modo Manutenção</h2>
+            <div class="maintenance-status">
+                <div class="status-indicator" id="maintenance-indicator"></div>
+                <span id="maintenance-text">Carregando status...</span>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                <button onclick="toggleMaintenance(true)" class="btn-danger">
+                    <i class="fas fa-power-off"></i> Ativar Manutenção
+                </button>
+                <button onclick="toggleMaintenance(false)" class="btn-on">
+                    <i class="fas fa-check-circle"></i> Desativar Manutenção
+                </button>
+            </div>
+            <div class="time-inputs">
+                <div>
+                    <label for="maintenance-hours">Horas</label>
+                    <input type="number" id="maintenance-hours" min="0" max="48" value="0" placeholder="0">
+                </div>
+                <div>
+                    <label for="maintenance-minutes">Minutos</label>
+                    <input type="number" id="maintenance-minutes" min="0" max="59" value="30" placeholder="30">
+                </div>
+            </div>
+            <button onclick="updateMaintenanceTime()" class="btn" style="width: 100%; margin-bottom: 15px;">
+                <i class="fas fa-clock"></i> Atualizar Tempo Estimado
+            </button>
+            <div id="maintenance-duration" style="margin-bottom: 15px; padding: 12px; background: #333; border-radius: 5px; text-align: center; color: #03dac6; font-weight: bold;">
+                Duração atual: Carregando...
+            </div>
+            <div class="preview-link">
+                <span style="color: #aaa;"><i class="fas fa-eye"></i> Visualizar página de manutenção:</span>
+                <a href="maintenance.html" target="_blank">
+                    Abrir Preview <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="khan-control">
+            <h2>
+                <i class="fas fa-graduation-cap"></i> Khan Academy Script
+                <span class="khan-badge">ESPECIAL</span>
+            </h2>
+            <div id="khan-info" style="margin-bottom: 15px;">
+                <div class="maintenance-status">
+                    <div class="status-indicator" id="khan-indicator"></div>
+                    <span id="khan-status-text">Carregando...</span>
+                </div>
+            </div>
+            
+            <label for="khan-id">Nome do Script</label>
+            <input type="text" id="khan-id" placeholder="Khan Academy">
+            
+            <label for="khan-category">Categoria</label>
+            <input type="text" id="khan-category" placeholder="Educação">
+            
+            <label for="khan-desc">Descrição</label>
+            <textarea id="khan-desc" rows="3" placeholder="Descrição do script..."></textarea>
+            
+            <label for="khan-code">Código JavaScript</label>
+            <textarea id="khan-code" rows="4" placeholder="javascript:fetch(...)..." style="font-family: monospace; font-size: 13px;"></textarea>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                <button onclick="updateKhanScript()" class="btn">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+                <button onclick="toggleKhanStatus()" id="khan-toggle-btn" class="btn-on">
+                    <i class="fas fa-power-off"></i> Alterar Status
+                </button>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 30px; background: #2a2a2a; padding: 20px; border-radius: 8px;">
+            <h2><i class="fab fa-discord"></i> Anúncios do Discord</h2>
+            <label for="discord-message">Mensagem do Anúncio</label>
+            <textarea id="discord-message" rows="3" placeholder="Escreva o anúncio que aparecerá no site..."></textarea>
+            <label for="discord-author">Autor do Anúncio</label>
+            <input type="text" id="discord-author" placeholder="Ex: Admin, Moderador..." value="Admin">
+            <button onclick="publicarNovoAnuncio()" class="btn" style="width: 100%;">
+                <i class="fas fa-paper-plane"></i> Publicar Novo Anúncio
+            </button>
+
+            <h3 style="margin-top: 30px; color: #bb86fc;">
+                <i class="fas fa-history"></i> Histórico de Anúncios
+            </h3>
+            <div id="announcements-list"></div>
+        </div>
+        
+        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <h2><i class="fas fa-bullhorn"></i> Aviso Global (Popup)</h2>
+            <textarea id="aviso-texto" rows="3" placeholder="Escreva a mensagem de aviso. Deixe em branco para remover."></textarea>
+            <button onclick="enviarAviso()" class="btn" style="width: 100%;"><i class="fas fa-paper-plane"></i> Enviar Aviso</button>
+        </div>
+
+        <div style="margin-top: 40px; background: #2a2a2a; padding: 20px; border-radius: 8px;">
+            <h2><i class="fas fa-plus-circle"></i> Adicionar Novo Script</h2>
+            <label for="new-script-id">Nome do Script (ID)</label>
+            <input type="text" id="new-script-id" placeholder="Ex: KhanWare">
+            <label for="new-script-category">Categoria</label>
+            <input type="text" id="new-script-category" placeholder="Ex: Educação">
+            <label for="new-script-url">URL do Script</label>
+            <input type="url" id="new-script-url" placeholder="https://site.com">
+            <label for="new-script-desc">Descrição</label>
+            <textarea id="new-script-desc" rows="3" placeholder="Descrição breve do script."></textarea>
+            <button onclick="addNewScript()" class="btn" style="width: 100%;"><i class="fas fa-save"></i> Guardar Novo Script</button>
+        </div>
+
+        <h2 style="margin-top: 40px;"><i class="fas fa-list-alt"></i> Gerir Scripts Existentes</h2>
+        <div id="scripts-list"></div>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2><i class="fas fa-edit"></i> Editar Script</h2>
+            <div>
+                <input type="hidden" id="edit-script-id">
+                <label for="edit-script-category">Categoria</label>
+                <input type="text" id="edit-script-category">
+                <label for="edit-script-url">URL do Script</label>
+                <input type="url" id="edit-script-url">
+                <label for="edit-script-desc">Descrição</label>
+                <textarea id="edit-script-desc" rows="4"></textarea>
+                <button onclick="saveScriptChanges()" class="btn" style="width: 100%;"><i class="fas fa-sync-alt"></i> Atualizar Script</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBxCCbHYMcU4dPgMWkhE73939ErOaA2Stc",
+          authDomain: "controle-class-scripts.firebaseapp.com",
+          databaseURL: "https://controle-class-scripts-default-rtdb.firebaseio.com",
+          projectId: "controle-class-scripts",
+          storageBucket: "controle-class-scripts.firebasestorage.app",
+          messagingSenderId: "662596791017",
+          appId: "1:662596791017:web:857fa68154bc2d17375e78"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        // Teste de conexão Firebase
+        console.log('Firebase inicializado');
+        console.log('Auth:', auth);
+        console.log('Database:', db);
+
+        // Verificar conexão com banco
+        db.ref('.info/connected').on('value', (snap) => {
+            if (snap.val() === true) {
+                console.log('✅ Conectado ao Firebase!');
+            } else {
+                console.log('❌ Desconectado do Firebase!');
+            }
+        });
+
+        // Auth State Observer
+        auth.onAuthStateChanged((user) => {
+            console.log('Estado de autenticação mudou:', user);
+            
+            if (user) {
+                console.log('Usuário logado:', user.email);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('register-screen').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('user-info-bar').classList.remove('hidden');
+                document.getElementById('user-email-display').textContent = user.email;
+                
+                // Load all data
+                loadMaintenanceStatus();
+                loadKhanScript();
+                loadScripts();
+                loadAnnouncements();
+            } else {
+                console.log('Nenhum usuário logado');
+                document.getElementById('login-screen').classList.remove('hidden');
+                document.getElementById('register-screen').classList.add('hidden');
+                document.getElementById('main-content').classList.add('hidden');
+                document.getElementById('user-info-bar').classList.add('hidden');
+            }
+        });
+
+        // Auth Functions
+        function showRegisterForm() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('register-screen').classList.remove('hidden');
+        }
+
+        function showLoginForm() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('register-screen').classList.add('hidden');
+        }
+
+        function registerUser() {
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+
+            if (!email || !password) {
+                alert('⚠️ Preencha email e senha!');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('⚠️ A senha deve ter no mínimo 6 caracteres!');
+                return;
+            }
+
+            console.log('Tentando criar conta com:', email);
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log('Conta criada com sucesso:', userCredential.user);
+                    alert('✅ Conta criada com sucesso! Você já está logado.');
+                })
+                .catch((error) => {
+                    console.error('Erro ao criar conta:', error);
+                    let errorMsg = '';
+                    
+                    switch(error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMsg = 'Este email já está em uso! Tente fazer login.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMsg = 'Email inválido!';
+                            break;
+                        case 'auth/weak-password':
+                            errorMsg = 'Senha muito fraca! Use no mínimo 6 caracteres.';
+                            break;
+                        default:
+                            errorMsg = error.message;
+                    }
+                    
+                    alert('❌ Erro ao criar conta: ' + errorMsg);
+                });
+        }
+
+        function loginUser() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                alert('⚠️ Preencha email e senha!');
+                return;
+            }
+
+            console.log('Tentando login com:', email);
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log('Login bem-sucedido:', userCredential.user);
+                    alert('✅ Login realizado com sucesso!');
+                })
+                .catch((error) => {
+                    console.error('Erro de login:', error);
+                    let errorMsg = '';
+                    
+                    switch(error.code) {
+                        case 'auth/invalid-email':
+                            errorMsg = 'Email inválido!';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMsg = 'Usuário desabilitado!';
+                            break;
+                        case 'auth/user-not-found':
+                            errorMsg = 'Usuário não encontrado! Crie uma conta primeiro.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMsg = 'Senha incorreta!';
+                            break;
+                        case 'auth/invalid-credential':
+                            errorMsg = 'Credenciais inválidas! Verifique email e senha.';
+                            break;
+                        default:
+                            errorMsg = error.message;
+                    }
+                    
+                    alert('❌ Erro ao fazer login: ' + errorMsg);
+                });
+        }
+
+        function logoutUser() {
+            if (confirm('Deseja sair do painel?')) {
+                auth.signOut();
+            }
+        }
+
+        // Utility Functions
+        function formatDuration(hours, minutes) {
+            const parts = [];
+            if (hours > 0) parts.push(`${hours}h`);
+            if (minutes > 0) parts.push(`${minutes}min`);
+            return parts.length > 0 ? parts.join(' ') : '0 min';
+        }
+
+        // Maintenance Functions
+        function loadMaintenanceStatus() {
+            db.ref('maintenance').on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                const indicator = document.getElementById('maintenance-indicator');
+                const text = document.getElementById('maintenance-text');
+                const hoursInput = document.getElementById('maintenance-hours');
+                const minutesInput = document.getElementById('maintenance-minutes');
+                const durationDiv = document.getElementById('maintenance-duration');
+
+                if (data.active) {
+                    indicator.className = 'status-indicator active';
+                    text.textContent = '🔴 Site em Manutenção';
+                    text.style.color = '#ff3e3e';
+                } else {
+                    indicator.className = 'status-indicator inactive';
+                    text.textContent = '🟢 Site Online';
+                    text.style.color = '#03dac6';
+                }
+
+                const hours = data.hours || 0;
+                const minutes = data.minutes || 30;
+
+                hoursInput.value = hours;
+                minutesInput.value = minutes;
+                durationDiv.textContent = `Duração atual: ${formatDuration(hours, minutes)}`;
+            });
+        }
+
+        function toggleMaintenance(activate) {
+            const hours = parseInt(document.getElementById('maintenance-hours').value) || 0;
+            const minutes = parseInt(document.getElementById('maintenance-minutes').value) || 0;
+            
+            if (activate && hours === 0 && minutes === 0) {
+                alert('⚠️ Defina um tempo de duração antes de ativar!');
+                return;
+            }
+
+            const confirmMsg = activate 
+                ? `Ativar manutenção por ${formatDuration(hours, minutes)}?`
+                : 'Desativar manutenção e liberar o site?';
+
+            if (!confirm(confirmMsg)) return;
+            
+            db.ref('maintenance').set({
+                active: activate,
+                hours: hours,
+                minutes: minutes,
+                timestamp: Date.now()
+            }).then(() => {
+                const msg = activate 
+                    ? `✅ Manutenção ATIVADA por ${formatDuration(hours, minutes)}!`
+                    : '✅ Manutenção DESATIVADA! Site online.';
+                alert(msg);
+                loadMaintenanceStatus();
+            }).catch(error => alert('❌ Erro: ' + error.message));
+        }
+
+        function updateMaintenanceTime() {
+            const hours = parseInt(document.getElementById('maintenance-hours').value) || 0;
+            const minutes = parseInt(document.getElementById('maintenance-minutes').value) || 0;
+            
+            if (hours === 0 && minutes === 0) {
+                alert('⚠️ Defina pelo menos 1 minuto!');
+                return;
+            }
+
+            db.ref('maintenance').update({
+                hours: hours,
+                minutes: minutes,
+                timestamp: Date.now()
+            }).then(() => {
+                alert(`✅ Tempo atualizado: ${formatDuration(hours, minutes)}!`);
+                loadMaintenanceStatus();
+            }).catch(error => alert('❌ Erro: ' + error.message));
+        }
+
+        // Khan Script Functions
+        function loadKhanScript() {
+            db.ref('khanScript').on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                const indicator = document.getElementById('khan-indicator');
+                const statusText = document.getElementById('khan-status-text');
+                const toggleBtn = document.getElementById('khan-toggle-btn');
+
+                document.getElementById('khan-id').value = data.id || 'Khan Academy';
+                document.getElementById('khan-category').value = data.category || 'Educação';
+                document.getElementById('khan-desc').value = data.desc || '';
+                document.getElementById('khan-code').value = data.code || '';
+
+                if (data.status === 'Ativo') {
+                    indicator.className = 'status-indicator inactive';
+                    statusText.textContent = '🟢 Script Ativo no Site';
+                    statusText.style.color = '#03dac6';
+                    toggleBtn.className = 'btn-off';
+                    toggleBtn.innerHTML = '<i class="fas fa-power-off"></i> Desativar';
+                } else {
+                    indicator.className = 'status-indicator active';
+                    statusText.textContent = '🔴 Script Desativado';
+                    statusText.style.color = '#ff3e3e';
+                    toggleBtn.className = 'btn-on';
+                    toggleBtn.innerHTML = '<i class="fas fa-check-circle"></i> Ativar';
+                }
+            });
+        }
+
+        function updateKhanScript() {
+            const updatedData = {
+                id: document.getElementById('khan-id').value.trim() || 'Khan Academy',
+                category: document.getElementById('khan-category').value.trim() || 'Educação',
+                desc: document.getElementById('khan-desc').value.trim(),
+                code: document.getElementById('khan-code').value.trim(),
+                status: 'Ativo'
+            };
+            
+            if (!updatedData.desc || !updatedData.code) {
+                alert('⚠️ Preencha todos os campos!');
+                return;
+            }
+
+            db.ref('khanScript').update(updatedData).then(() => {
+                alert('✅ Khan Academy Script atualizado!');
+                loadKhanScript();
+            }).catch(error => alert('❌ Erro: ' + error.message));
+        }
+
+        function toggleKhanStatus() {
+            db.ref('khanScript').once('value').then((snapshot) => {
+                const data = snapshot.val() || {};
+                const currentStatus = data.status || 'Ativo';
+                const newStatus = currentStatus === 'Ativo' ? 'Offline' : 'Ativo';
+                
+                return db.ref('khanScript').update({ status: newStatus });
+            }).then(() => {
+                alert('✅ Status do Khan Script alterado!');
+                loadKhanScript();
+            }).catch(error => alert('❌ Erro: ' + error.message));
+        }
+
+        // Announcements Functions
+        function publicarNovoAnuncio() {
+            const mensagem = document.getElementById('discord-message').value.trim();
+            const autor = document.getElementById('discord-author').value.trim() || 'Admin';
+            
+            if (!mensagem) {
+                alert('⚠️ Digite uma mensagem!');
+                return;
+            }
+
+            const newAnnouncementRef = db.ref('discordAnnouncements').push();
+            newAnnouncementRef.set({
+                mensagem: mensagem,
+                autor: autor,
+                timestamp: Date.now()
+            }).then(() => {
+                alert('✅ Anúncio publicado!');
+                document.getElementById('discord-message').value = '';
+                loadAnnouncements();
+            }).catch(error => alert('❌ Erro: ' + error.message));
+        }
+
+        function loadAnnouncements() {
+            db.ref('discordAnnouncements').on('value', (snapshot) => {
+                const data = snapshot.val() || {};
+                const list = document.getElementById('announcements-list');
+                list.innerHTML = '';
+                
+                const announcements = [];
+                Object.keys(data).forEach(key => {
+                    announcements.push({ key: key, ...data[key] });
+                });
+
+                if (announcements.length === 0) {
+                    list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Nenhum anúncio publicado.</p>';
+                    return;
+                }
+
+                announcements.sort((a, b) => b.timestamp - a.timestamp);
+                
+                announcements.forEach(a => {
+                    const date = new Date(a.timestamp);
+                    const dateStr = date.toLocaleDateString('pt-BR');
+                    const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+                    const item = document.createElement('div');
+                    item.className = 'announcement-item';
+                    item.innerHTML = `
+                        <div class="announcement-info">
+                            <h3>${a.mensagem.substring(0, 50)}${a.mensagem.length > 50 ? '...' : ''}</h3>
+                            <small>Por: ${a.autor} | ${dateStr} às ${timeStr}</small>
+                        </div>
+                        <div class="announcement-actions">
+                            <button onclick="deleteAnnouncement('${a.key}')" class="btn-danger">
+                                <i class="fas fa-trash"></i> Remover
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            });
+        }

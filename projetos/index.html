@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Class Scripts - Ferramentas para Sala do Futuro</title>
+    <meta name="description" content="Scripts e ferramentas para otimizar sua experiência na Sala do Futuro. Khan Academy automático e muito mais!">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://class-scripts.com/">
+    <meta property="og:title" content="Class Scripts - Ferramentas Educacionais">
+    <meta property="og:description" content="Scripts automáticos para Khan Academy e outras ferramentas educacionais. Otimize seus estudos na Sala do Futuro!">
+    <meta property="og:image" content="https://saladofuturohack.xyz/class.png">
+    
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://class-scripts.com/">
+    <meta property="twitter:title" content="Class Scripts - Ferramentas Educacionais">
+    <meta property="twitter:description" content="Scripts automáticos para Khan Academy e outras ferramentas educacionais. Otimize seus estudos na Sala do Futuro!">
+    <meta property="twitter:image" content="https://saladofuturohack.xyz/class.png">
+    
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 16L10 20L14 24' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M34 32L38 28L34 24' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M28 14L20 34' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700;7..72,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="welcome-card.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    </head>
+    <body>
+    <div id="welcome-card" class="welcome-card">
+        <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 16L10 20L14 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M34 32L38 28L34 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M28 14L20 34" stroke="white" stroke-width="2.5" stroke-linecap="round"></path>
+        </svg>
+        <span>Bem vindo a Class Scripts</span>
+    </div>
+    
+    
+        <div id="main-content">
+            <div id="preloader">
+                <svg class="preloader-logo" width="80" height="80" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 16L10 20L14 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M34 32L38 28L34 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M28 14L20 34" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+                <div id="welcome-message">Bem vindo a Class Scripts</div>
+            </div>
+    
+            <div id="cat-cursor">
+                <canvas id="neko-canvas" width="32" height="32"></canvas>
+            </div>
+    
+            <header>
+                <div class="container">
+                    <nav>
+                        <a href="#" class="logo">
+                            <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 16L10 20L14 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M34 32L38 28L34 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M28 14L20 34" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                            Class Scripts
+                        </a>
+                        <ul class="nav-links">
+                            <li><a href="#scripts">Scripts</a></li>
+                            <li><a href="https://discord.gg/platformdestroyer" target="_blank">Suporte</a></li>
+                            <li><a href="https://discord.gg/platformdestroyer" target="_blank">Comunidade</a></li>
+                        </ul>
+                        <div class="hamburger">
+                            <i class="fas fa-bars"></i>
+                        </div>
+                    </nav>
+                    <ul class="mobile-menu">
+                        <li><a href="#scripts">Scripts</a></li>
+                        <li><a href="https://discord.gg/platformdestroyer" target="_blank">Suporte</a></li>
+                        <li><a href="https://discord.gg/platformdestroyer" target="_blank">Comunidade</a></li>
+                    </ul>
+                </div>
+            </header>
+            <main>
+                <section class="hero reveal-on-scroll">
+                    <div class="container">
+                        <h1 id="typing-title"></h1>
+                        <p>Ferramentas para otimizar sua experiência na Sala do Futuro</p>
+    
+                        <div class="countdown-section">
+                            <h3 class="countdown-title" id="countdown-title">Fim das Aulas em:</h3>
+                            <div id="vacation-video" style="display: none; margin: 20px 0;">
+                                <iframe id="youtube-video" width="100%" height="315" style="max-width: 560px; border-radius: 16px; border: 2px solid var(--border);" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="countdown-timer" id="countdown-timer">
+                                <div class="countdown-item">
+                                    <span id="days">0</span>
+                                    <span>Dias</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span id="hours">0</span>
+                                    <span>Horas</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span id="minutes">0</span>
+                                    <span>Minutos</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span id="seconds">0</span>
+                                    <span>Segundos</span>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <a href="#scripts" class="btn">
+                            <i class="fas fa-code"></i>
+                            Ver Scripts
+                        </a>
+                    </div>
+                </section>
+    
+
+    
+                <section id="scripts" class="scripts-section reveal-on-scroll">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2 class="section-title">Scripts Disponíveis</h2>
+                        </div>
+                        <div class="scripts-grid" id="scripts-grid"></div>
+                    </div>
+                </section>
+    
+                <section id="founders" class="founders-section reveal-on-scroll">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2 class="section-title"><img src="pd.png" alt="PD" class="section-title-icon" loading="lazy">Fundadores</h2>
+                        </div>
+    
+                        <div class="founders-grid">
+                            <article class="founder-card">
+                                <img src="fund2.png" alt="Fundador 1" loading="lazy">
+                                <h3 class="founder-name">Cupiditys</h3>
+                            </article>
+    
+                            <article class="founder-card">
+                                <img src="fn1.png" alt="Fundador 2" loading="lazy">
+                                <h3 class="founder-name">Flowings</h3>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+            </main>
+    
+            <footer class="reveal-on-scroll">
+                <div class="container">
+                    <p>
+                        Feito por 
+                        <a href="https://discordapp.com/users/730899087825829888" target="_blank" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <img src="eu.png" alt="ghosst avatar" class="discord-avatar">
+                            <i class="fab fa-discord" style="font-size: 18px; color: #5865f2;"></i>
+                           eri10pc
+                        </a>
+                    </p>
+                    
+                    <div style="margin: 20px 0; display: flex; gap: 12px; justify-content: center; align-items: center;">
+                        <a href="https://www.instagram.com/eri10pc/" target="_blank" class="Btn" title="Instagram">
+                            <span class="svgContainer">
+                                <svg fill="white" class="svgIcon" viewBox="0 0 448 512" height="1.5em" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path>
+                                </svg>
+                            </span>
+                            <span class="BG"></span>
+                        </a>
+                    </div>
+                    
+                    <img src="sla.png" alt="Meme" onerror="this.style.display='none'">
+                </div>
+            </footer>
+        </div>
+    
+                <script>
+            setInterval(function() {
+                console.clear();
+            }, 100);
+        </script>
+        <script src="/assets/images/neko/neko.js"></script>
+        <script src="main.js"></script>
+    </body>
+    </html>
