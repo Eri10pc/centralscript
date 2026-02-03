@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel de Controle - Admin</title>
+    <title>Painel de Controle - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -45,10 +45,6 @@
 
         .user-info { position: fixed; top: 20px; right: 20px; background: #2a2a2a; padding: 10px 20px; border-radius: 8px; display: flex; align-items: center; gap: 10px; z-index: 100; }
         .user-info button { padding: 8px 16px; }
-
-        .preview-link { background: rgba(3, 218, 198, 0.1); border: 1px solid #03dac6; padding: 12px; border-radius: 8px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
-        .preview-link a { color: #03dac6; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .preview-link a:hover { text-decoration: underline; }
 
         .hidden { display: none !important; }
 
@@ -149,17 +145,11 @@
                     <input type="number" id="maintenance-minutes" min="0" max="59" value="30" placeholder="30">
                 </div>
             </div>
-            <button onclick="updateMaintenanceTime()" class="btn" style="width: 100%; margin-bottom: 15px;">
+            <button onclick="updateMaintenanceTime()" class="btn" style="width: 100%;">
                 <i class="fas fa-clock"></i> Atualizar Tempo Estimado
             </button>
-            <div id="maintenance-duration" style="margin-bottom: 15px; padding: 12px; background: #333; border-radius: 5px; text-align: center; color: #03dac6; font-weight: bold;">
+            <div id="maintenance-duration" style="margin-top: 15px; padding: 12px; background: #333; border-radius: 5px; text-align: center; color: #03dac6; font-weight: bold;">
                 Duração atual: Carregando...
-            </div>
-            <div class="preview-link">
-                <span style="color: #aaa;"><i class="fas fa-eye"></i> Visualizar página de manutenção:</span>
-                <a href="maintenance.html" target="_blank">
-                    Abrir Preview <i class="fas fa-external-link-alt"></i>
-                </a>
             </div>
         </div>
 
@@ -197,13 +187,13 @@
             </div>
         </div>
 
-        <div style="margin-bottom: 30px; background: #2a2a2a; padding: 20px; border-radius: 8px;">
+        <div style="margin-bottom: 30px;">
             <h2><i class="fab fa-discord"></i> Anúncios do Discord</h2>
             <label for="discord-message">Mensagem do Anúncio</label>
             <textarea id="discord-message" rows="3" placeholder="Escreva o anúncio que aparecerá no site..."></textarea>
             <label for="discord-author">Autor do Anúncio</label>
             <input type="text" id="discord-author" placeholder="Ex: Admin, Moderador..." value="Admin">
-            <button onclick="publicarNovoAnuncio()" class="btn" style="width: 100%;">
+            <button onclick="publicarNovoAnuncio()" class="btn">
                 <i class="fas fa-paper-plane"></i> Publicar Novo Anúncio
             </button>
 
@@ -213,13 +203,13 @@
             <div id="announcements-list"></div>
         </div>
         
-        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <div>
             <h2><i class="fas fa-bullhorn"></i> Aviso Global (Popup)</h2>
             <textarea id="aviso-texto" rows="3" placeholder="Escreva a mensagem de aviso. Deixe em branco para remover."></textarea>
-            <button onclick="enviarAviso()" class="btn" style="width: 100%;"><i class="fas fa-paper-plane"></i> Enviar Aviso</button>
+            <button onclick="enviarAviso()" class="btn"><i class="fas fa-paper-plane"></i> Enviar Aviso</button>
         </div>
 
-        <div style="margin-top: 40px; background: #2a2a2a; padding: 20px; border-radius: 8px;">
+        <div style="margin-top: 40px;">
             <h2><i class="fas fa-plus-circle"></i> Adicionar Novo Script</h2>
             <label for="new-script-id">Nome do Script (ID)</label>
             <input type="text" id="new-script-id" placeholder="Ex: KhanWare">
@@ -229,7 +219,7 @@
             <input type="url" id="new-script-url" placeholder="https://site.com">
             <label for="new-script-desc">Descrição</label>
             <textarea id="new-script-desc" rows="3" placeholder="Descrição breve do script."></textarea>
-            <button onclick="addNewScript()" class="btn" style="width: 100%;"><i class="fas fa-save"></i> Guardar Novo Script</button>
+            <button onclick="addNewScript()" class="btn"><i class="fas fa-save"></i> Guardar Novo Script</button>
         </div>
 
         <h2 style="margin-top: 40px;"><i class="fas fa-list-alt"></i> Gerir Scripts Existentes</h2>
@@ -248,7 +238,7 @@
                 <input type="url" id="edit-script-url">
                 <label for="edit-script-desc">Descrição</label>
                 <textarea id="edit-script-desc" rows="4"></textarea>
-                <button onclick="saveScriptChanges()" class="btn" style="width: 100%;"><i class="fas fa-sync-alt"></i> Atualizar Script</button>
+                <button onclick="saveScriptChanges()" class="btn"><i class="fas fa-sync-alt"></i> Atualizar Script</button>
             </div>
         </div>
     </div>
@@ -271,26 +261,10 @@
         const db = firebase.database();
         const auth = firebase.auth();
 
-        // Teste de conexão Firebase
-        console.log('Firebase inicializado');
-        console.log('Auth:', auth);
-        console.log('Database:', db);
-
-        // Verificar conexão com banco
-        db.ref('.info/connected').on('value', (snap) => {
-            if (snap.val() === true) {
-                console.log('✅ Conectado ao Firebase!');
-            } else {
-                console.log('❌ Desconectado do Firebase!');
-            }
-        });
-
         // Auth State Observer
         auth.onAuthStateChanged((user) => {
-            console.log('Estado de autenticação mudou:', user);
-            
             if (user) {
-                console.log('Usuário logado:', user.email);
+                // User is signed in
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('register-screen').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
@@ -303,7 +277,7 @@
                 loadScripts();
                 loadAnnouncements();
             } else {
-                console.log('Nenhum usuário logado');
+                // User is signed out
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('register-screen').classList.add('hidden');
                 document.getElementById('main-content').classList.add('hidden');
@@ -327,41 +301,21 @@
             const password = document.getElementById('register-password').value;
 
             if (!email || !password) {
-                alert('⚠️ Preencha email e senha!');
+                alert('Preencha email e senha!');
                 return;
             }
 
             if (password.length < 6) {
-                alert('⚠️ A senha deve ter no mínimo 6 caracteres!');
+                alert('A senha deve ter no mínimo 6 caracteres!');
                 return;
             }
 
-            console.log('Tentando criar conta com:', email);
-
             auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    console.log('Conta criada com sucesso:', userCredential.user);
-                    alert('✅ Conta criada com sucesso! Você já está logado.');
+                .then(() => {
+                    alert('Conta criada com sucesso!');
                 })
                 .catch((error) => {
-                    console.error('Erro ao criar conta:', error);
-                    let errorMsg = '';
-                    
-                    switch(error.code) {
-                        case 'auth/email-already-in-use':
-                            errorMsg = 'Este email já está em uso! Tente fazer login.';
-                            break;
-                        case 'auth/invalid-email':
-                            errorMsg = 'Email inválido!';
-                            break;
-                        case 'auth/weak-password':
-                            errorMsg = 'Senha muito fraca! Use no mínimo 6 caracteres.';
-                            break;
-                        default:
-                            errorMsg = error.message;
-                    }
-                    
-                    alert('❌ Erro ao criar conta: ' + errorMsg);
+                    alert('Erro ao criar conta: ' + error.message);
                 });
         }
 
@@ -370,42 +324,16 @@
             const password = document.getElementById('login-password').value;
 
             if (!email || !password) {
-                alert('⚠️ Preencha email e senha!');
+                alert('Preencha email e senha!');
                 return;
             }
 
-            console.log('Tentando login com:', email);
-
             auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    console.log('Login bem-sucedido:', userCredential.user);
-                    alert('✅ Login realizado com sucesso!');
+                .then(() => {
+                    alert('Login realizado com sucesso!');
                 })
                 .catch((error) => {
-                    console.error('Erro de login:', error);
-                    let errorMsg = '';
-                    
-                    switch(error.code) {
-                        case 'auth/invalid-email':
-                            errorMsg = 'Email inválido!';
-                            break;
-                        case 'auth/user-disabled':
-                            errorMsg = 'Usuário desabilitado!';
-                            break;
-                        case 'auth/user-not-found':
-                            errorMsg = 'Usuário não encontrado! Crie uma conta primeiro.';
-                            break;
-                        case 'auth/wrong-password':
-                            errorMsg = 'Senha incorreta!';
-                            break;
-                        case 'auth/invalid-credential':
-                            errorMsg = 'Credenciais inválidas! Verifique email e senha.';
-                            break;
-                        default:
-                            errorMsg = error.message;
-                    }
-                    
-                    alert('❌ Erro ao fazer login: ' + errorMsg);
+                    alert('Erro ao fazer login: ' + error.message);
                 });
         }
 
@@ -425,7 +353,7 @@
 
         // Maintenance Functions
         function loadMaintenanceStatus() {
-            db.ref('maintenance').on('value', (snapshot) => {
+            db.ref('maintenance').once('value').then((snapshot) => {
                 const data = snapshot.val() || {};
                 const indicator = document.getElementById('maintenance-indicator');
                 const text = document.getElementById('maintenance-text');
@@ -456,29 +384,15 @@
             const hours = parseInt(document.getElementById('maintenance-hours').value) || 0;
             const minutes = parseInt(document.getElementById('maintenance-minutes').value) || 0;
             
-            if (activate && hours === 0 && minutes === 0) {
-                alert('⚠️ Defina um tempo de duração antes de ativar!');
-                return;
-            }
-
-            const confirmMsg = activate 
-                ? `Ativar manutenção por ${formatDuration(hours, minutes)}?`
-                : 'Desativar manutenção e liberar o site?';
-
-            if (!confirm(confirmMsg)) return;
-            
             db.ref('maintenance').set({
                 active: activate,
                 hours: hours,
                 minutes: minutes,
                 timestamp: Date.now()
             }).then(() => {
-                const msg = activate 
-                    ? `✅ Manutenção ATIVADA por ${formatDuration(hours, minutes)}!`
-                    : '✅ Manutenção DESATIVADA! Site online.';
-                alert(msg);
+                alert(activate ? 'Manutenção ATIVADA!' : 'Manutenção DESATIVADA!');
                 loadMaintenanceStatus();
-            }).catch(error => alert('❌ Erro: ' + error.message));
+            }).catch(error => alert('Erro: ' + error.message));
         }
 
         function updateMaintenanceTime() {
@@ -486,23 +400,22 @@
             const minutes = parseInt(document.getElementById('maintenance-minutes').value) || 0;
             
             if (hours === 0 && minutes === 0) {
-                alert('⚠️ Defina pelo menos 1 minuto!');
+                alert('Defina pelo menos 1 minuto!');
                 return;
             }
 
             db.ref('maintenance').update({
                 hours: hours,
-                minutes: minutes,
-                timestamp: Date.now()
+                minutes: minutes
             }).then(() => {
-                alert(`✅ Tempo atualizado: ${formatDuration(hours, minutes)}!`);
+                alert(`Tempo atualizado: ${formatDuration(hours, minutes)}!`);
                 loadMaintenanceStatus();
-            }).catch(error => alert('❌ Erro: ' + error.message));
+            }).catch(error => alert('Erro: ' + error.message));
         }
 
         // Khan Script Functions
         function loadKhanScript() {
-            db.ref('khanScript').on('value', (snapshot) => {
+            db.ref('khanScript').once('value').then((snapshot) => {
                 const data = snapshot.val() || {};
                 const indicator = document.getElementById('khan-indicator');
                 const statusText = document.getElementById('khan-status-text');
@@ -539,14 +452,14 @@
             };
             
             if (!updatedData.desc || !updatedData.code) {
-                alert('⚠️ Preencha todos os campos!');
+                alert('Preencha todos os campos!');
                 return;
             }
 
             db.ref('khanScript').update(updatedData).then(() => {
-                alert('✅ Khan Academy Script atualizado!');
+                alert('Khan Academy Script atualizado!');
                 loadKhanScript();
-            }).catch(error => alert('❌ Erro: ' + error.message));
+            }).catch(error => alert('Erro: ' + error.message));
         }
 
         function toggleKhanStatus() {
@@ -557,9 +470,9 @@
                 
                 return db.ref('khanScript').update({ status: newStatus });
             }).then(() => {
-                alert('✅ Status do Khan Script alterado!');
+                alert('Status do Khan Script alterado!');
                 loadKhanScript();
-            }).catch(error => alert('❌ Erro: ' + error.message));
+            }).catch(error => alert('Erro: ' + error.message));
         }
 
         // Announcements Functions
@@ -568,7 +481,7 @@
             const autor = document.getElementById('discord-author').value.trim() || 'Admin';
             
             if (!mensagem) {
-                alert('⚠️ Digite uma mensagem!');
+                alert('Digite uma mensagem!');
                 return;
             }
 
@@ -578,14 +491,14 @@
                 autor: autor,
                 timestamp: Date.now()
             }).then(() => {
-                alert('✅ Anúncio publicado!');
+                alert('Anúncio publicado!');
                 document.getElementById('discord-message').value = '';
                 loadAnnouncements();
-            }).catch(error => alert('❌ Erro: ' + error.message));
+            }).catch(error => alert('Erro: ' + error.message));
         }
 
         function loadAnnouncements() {
-            db.ref('discordAnnouncements').on('value', (snapshot) => {
+            db.ref('discordAnnouncements').once('value').then((snapshot) => {
                 const data = snapshot.val() || {};
                 const list = document.getElementById('announcements-list');
                 list.innerHTML = '';
@@ -596,7 +509,7 @@
                 });
 
                 if (announcements.length === 0) {
-                    list.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Nenhum anúncio publicado.</p>';
+                    list.innerHTML = '<p style="color: #888;">Nenhum anúncio.</p>';
                     return;
                 }
 
@@ -624,3 +537,156 @@
                 });
             });
         }
+
+        function deleteAnnouncement(key) {
+            if (confirm('Remover anúncio?')) {
+                db.ref(`discordAnnouncements/${key}`).remove().then(() => {
+                    alert('Anúncio removido!');
+                    loadAnnouncements();
+                }).catch(error => alert('Erro: ' + error.message));
+            }
+        }
+
+        // Global Notice Function
+        function enviarAviso() {
+            const texto = document.getElementById('aviso-texto').value.trim();
+            
+            db.ref('avisoGlobal').set({
+                mensagem: texto
+            }).then(() => {
+                alert('Aviso global atualizado!');
+            }).catch(error => alert('Erro: ' + error.message));
+        }
+
+        // Scripts Functions
+        function loadScripts() {
+            db.ref('scripts').once('value').then((snapshot) => {
+                const data = snapshot.val() || {};
+                const list = document.getElementById('scripts-list');
+                list.innerHTML = '';
+                
+                const keys = Object.keys(data);
+                if (keys.length === 0) {
+                    list.innerHTML = '<p style="color: #888;">Nenhum script cadastrado.</p>';
+                    return;
+                }
+
+                keys.sort().forEach(scriptId => {
+                    const s = data[scriptId];
+                    const item = document.createElement('div');
+                    item.className = 'script-item';
+                    item.innerHTML = `
+                        <div class="script-info">
+                            <h3>${s.id}</h3>
+                            <small>Categoria: ${s.category} | Estado: ${s.status}</small>
+                        </div>
+                        <div class="script-actions">
+                            <button onclick="toggleScriptStatus('${scriptId}')" class="${s.status === 'Ativo' ? 'btn-off' : 'btn-on'}">
+                                ${s.status === 'Ativo' ? 'OFF' : 'ON'}
+                            </button>
+                            <button onclick="openEditModal('${scriptId}')" class="btn">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button onclick="deleteScript('${scriptId}')" class="btn-danger">
+                                <i class="fas fa-trash"></i> Remover
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            });
+        }
+
+        function addNewScript() {
+            const id = document.getElementById('new-script-id').value.trim();
+            const category = document.getElementById('new-script-category').value.trim();
+            const url = document.getElementById('new-script-url').value.trim();
+            const desc = document.getElementById('new-script-desc').value.trim();
+            
+            if (!id || !category || !url || !desc) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+
+            db.ref(`scripts/${id}`).set({
+                id: id,
+                category: category,
+                url: url,
+                desc: desc,
+                status: 'Ativo'
+            }).then(() => {
+                alert('Script adicionado com sucesso!');
+                document.getElementById('new-script-id').value = '';
+                document.getElementById('new-script-category').value = '';
+                document.getElementById('new-script-url').value = '';
+                document.getElementById('new-script-desc').value = '';
+                loadScripts();
+            }).catch(error => alert('Erro: ' + error.message));
+        }
+
+        function toggleScriptStatus(scriptId) {
+            db.ref(`scripts/${scriptId}`).once('value').then((snapshot) => {
+                const data = snapshot.val() || {};
+                const currentStatus = data.status || 'Ativo';
+                const newStatus = currentStatus === 'Ativo' ? 'Offline' : 'Ativo';
+                
+                return db.ref(`scripts/${scriptId}`).update({ status: newStatus });
+            }).then(() => {
+                loadScripts();
+            }).catch(error => alert('Erro: ' + error.message));
+        }
+
+        function deleteScript(scriptId) {
+            if (confirm(`Remover script "${scriptId}"?`)) {
+                db.ref(`scripts/${scriptId}`).remove().then(() => {
+                    alert('Script removido!');
+                    loadScripts();
+                }).catch(error => alert('Erro: ' + error.message));
+            }
+        }
+
+        // Modal Functions
+        const modal = document.getElementById('edit-modal');
+
+        function openEditModal(scriptId) {
+            db.ref(`scripts/${scriptId}`).once('value').then((snapshot) => {
+                const s = snapshot.val() || {};
+                document.getElementById('edit-script-id').value = scriptId;
+                document.getElementById('edit-script-category').value = s.category || '';
+                document.getElementById('edit-script-url').value = s.url || '';
+                document.getElementById('edit-script-desc').value = s.desc || '';
+                modal.style.display = 'block';
+            });
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        function saveScriptChanges() {
+            const scriptId = document.getElementById('edit-script-id').value;
+            const updatedData = {
+                category: document.getElementById('edit-script-category').value.trim(),
+                url: document.getElementById('edit-script-url').value.trim(),
+                desc: document.getElementById('edit-script-desc').value.trim()
+            };
+
+            if (!updatedData.category || !updatedData.url || !updatedData.desc) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+
+            db.ref(`scripts/${scriptId}`).update(updatedData).then(() => {
+                alert('Script atualizado!');
+                closeModal();
+                loadScripts();
+            }).catch(error => alert('Erro: ' + error.message));
+        }
+
+        // Initialize
+        window.onclick = function(event) {
+            if (event.target == modal) closeModal();
+        }
+    </script>
+</body>
+</html>
